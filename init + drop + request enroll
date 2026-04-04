@@ -1,0 +1,60 @@
+class Course:
+    """Represents a single course and the students in it"""
+    
+    def __init__(self, course_code: str, credits: int, capacity: int):
+        self.course_code = course_code
+        self.credits = credits
+        self.capacity = capacity
+        
+        self.enrolled = []      
+        self.waitlist = LinkedQueue()   #fifo waitlist
+
+    
+    def add_student(self, student: Student):
+        """Adds a students to course roster"""
+        if student not in self.students:
+            self.students.append(student)
+    
+    
+    def get_student_count(self):
+        """Counts how many students are in a course"""
+        return len(self.students)
+    
+    def request_enroll(self, student, enroll_date):
+        for record in self.enrolled:
+            if record.student.student_id == student.student_id:
+                return  
+        if len(self.enrolled) < self.capacity:
+            record = EnrollmentRecord(student, enroll_date)
+            self.enrolled.append(record)
+        else:
+            self.waitlist.enqueue(student)
+
+        #ask: If a student is already enrolled, should we ignore the request or raise an exception?
+
+
+    def drop(self, student_id, enroll_date_for_replacement=None):
+        removed = False
+        for i, record in enumerate(self.enrolled):
+            if record.student.student_id == student_id:
+                self.enrolled.pop(i)
+                removed = True
+                break
+        """go through the list, look fot this student, if found remove"""
+
+        if not removed:
+            return
+        if not self.waitlist.is_empty():
+            next_student = self.waitlist.dequeue()
+
+        
+            if enroll_date_for_replacement:
+                new_date = enroll_date_for_replacement
+            else:
+                new_date = date.today()
+
+            new_record = EnrollmentRecord(next_student, new_date)
+            self.enrolled.append(new_record)
+
+        """if someone was removed replace them with the nect person in the waitlist."""
+ 
