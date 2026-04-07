@@ -1,5 +1,5 @@
 import csv
-from enrollment_structure import Enrollment
+from enrollment_structure import EnrollmentRecord
 
 class Student:
     """Represents an individual student with their courses and attached grades"""
