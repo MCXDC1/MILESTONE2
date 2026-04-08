@@ -1,0 +1,5 @@
+Binary search: 
+
+    Binary search's time complexity is O(log n) because it keeps halving while it searches. The list has to be 
+    sorted so it knows whether to search the left or right half. If the list is not sorted, it might accidentally
+    get rid of the wrong part of the list that has what your searching for in it.
