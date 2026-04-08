@@ -41,12 +41,12 @@ class Student:
 
     #Mia
     def enroll(self, course, grade: str):
-        """Enrolls a student into a course"""
+        """Enrolls a Student using Enrollment Record into a course"""
         if grade not in self.grade_points:
             raise ValueError(f"{grade} is not a grade in the system")
         else:
             self.courses[course] = grade
-            course.add_student(self)
+            course.request_enroll(self, datetime.date.today())
 
     #Mia
     def update_grade(self, course, grade: str):
@@ -56,10 +56,9 @@ class Student:
         else:
             self.courses[course] = grade
 
-    #Mia
+    #Paris
     def get_courses(self):
         """Returns all courses a student is enrolled in"""
-        """Paris"""
         return list(self.courses.keys())
 
     #Paris
@@ -109,10 +108,10 @@ class Course:
         self.enrollment_sorted_by = None
 
     #Mia
-    def add_student(self, student: Student):
-        """Adds a students to course roster"""
-        if student not in self.students:
-            self.enrolled.append(student)
+    #def add_student(self, student: Student):
+       # if student not in self.students:
+          #  self.enrolled.append(student) 
+    
     
     #Mia
     def get_student_count(self):
@@ -157,14 +156,15 @@ class Course:
             self.enrolled.append(new_record)
 
         #if someone was removed replace them with the next person in the waitlist
- 
+    
+    #Mia
     def sort_enrolled(self, by: str, algorithm: str):
         """Sort the enrolled roster by key: name, id or date enrolled \n
         Stores what key the roster is sorted by \n
         Rejects sorting by other methods"""
 
-        by.lower()
-        algorithm.lower()
+        by = by.lower()
+        algorithm = algorithm.lower()
 
         allowed_methods = ('name', 'id', 'date')
 

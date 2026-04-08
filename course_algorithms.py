@@ -1,4 +1,4 @@
-
+#Mia
 def insertion(L: list):
     n = len(L)
     for i in range(n):
@@ -7,7 +7,7 @@ def insertion(L: list):
             L[j], L[j + 1] = L[j + 1], L[j]
             j += 1
 
-
+#Mia
 def bubble(L: list):
 
     n = len(L)
