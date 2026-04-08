@@ -1,3 +1,8 @@
+from enrollment_structure import EnrollmentRecord
+from linked import LinkedQueue
+from university_system2 import Student
+import datetime 
+
 class Course:
     """Represents a single course and the students in it"""
     
@@ -51,7 +56,7 @@ class Course:
             if enroll_date_for_replacement:
                 new_date = enroll_date_for_replacement
             else:
-                new_date = date.today()
+                new_date = datetime.date.today()
 
             new_record = EnrollmentRecord(next_student, new_date)
             self.enrolled.append(new_record)

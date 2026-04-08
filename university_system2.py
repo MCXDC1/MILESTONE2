@@ -1,4 +1,5 @@
 import csv
+import datetime 
 from enrollment_structure import EnrollmentRecord
 
 class Student:
@@ -91,7 +92,7 @@ class Student:
             
        return all_courses
 
-from linked import LinkedQueue, LinkedList, ListNode
+from linked import LinkedQueue
 from course_algorithms import bubble, insertion
 
 class Course:
@@ -99,36 +100,87 @@ class Course:
     
     #Mia
     def __init__(self, course_code: str, credits: int, capacity: int):
-        """Initializes a Course object with a code, how many credits for the course, and capacity"""
+        """Initializes a Course object with a code, how many credits for the course, and capacity for course"""
         self.course_code = course_code
         self.credits = credits
         self.waitlist = LinkedQueue()
-        self.capacity = capacity #Fix this
-        self.students = list()
+        self.capacity = capacity 
         self.enrolled = list()
+        self.enrollment_sorted_by = None
 
     #Mia
     def add_student(self, student: Student):
         """Adds a students to course roster"""
         if student not in self.students:
-            self.students.append(student)
+            self.enrolled.append(student)
     
     #Mia
     def get_student_count(self):
         """Counts how many students are in a course"""
-        return len(self.students)
+        return len(self.enrolled)
     
-    def sort_enrolled(self, by, algorithm):
+    #Paris
+    def request_enroll(self, student, enroll_date):
+        for record in self.enrolled:
+            if record.student.student_id == student.student_id:
+                return  
+        if len(self.enrolled) < self.capacity:
+            record = EnrollmentRecord(student, enroll_date)
+            self.enrolled.append(record)
+        else:
+            self.waitlist.enqueue(student)
+
+        #ask: If a student is already enrolled, should we ignore the request or raise an exception?
+
+    #Paris
+    def drop(self, student_id, enroll_date_for_replacement=None):
+        removed = False
+        for i, record in enumerate(self.enrolled):
+            if record.student.student_id == student_id:
+                self.enrolled.pop(i)
+                removed = True
+                break
+        #go through the list, look for this student, if found remove them
+
+        if not removed:
+            return
+        if not self.waitlist.is_empty():
+            next_student = self.waitlist.dequeue()
+
+        
+            if enroll_date_for_replacement:
+                new_date = enroll_date_for_replacement
+            else:
+                new_date = datetime.date.today()
+
+            new_record = EnrollmentRecord(next_student, new_date)
+            self.enrolled.append(new_record)
+
+        #if someone was removed replace them with the next person in the waitlist
+ 
+    def sort_enrolled(self, by: str, algorithm: str):
+        """Sort the enrolled roster by key: name, id or date enrolled \n
+        Stores what key the roster is sorted by \n
+        Rejects sorting by other methods"""
+
+        by.lower()
+        algorithm.lower()
+
+        allowed_methods = ('name', 'id', 'date')
+
+        if by not in allowed_methods:
+            raise ValueError("The system can only be sorted by name, id, or date!")
+
+        EnrollmentRecord.key = by
+
+        if algorithm == 'bubble':
+            bubble(self.enrolled)
+        else:
+            insertion(self.enrolled)
+
         self.enrollment_sorted_by = by
 
-        if self.enrollment_sorted_by == 'name':
-            return None #Fix this
-        elif self.enrollment_sorted_by == 'date':
-            return None #Fix this
-        elif self.enrollment_sorted_by == 'id':
-            return None #Fix this
-        else:
-            raise ValueError("The system can only sorted by name, id, or date!")
+    
 
 class University: 
     """Stores all students and all courses"""
@@ -325,6 +377,7 @@ class University:
         return {
             "mean": round(mean, 2),
             "median": round(median, 2)
+        
         }
     
 
